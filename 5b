@@ -1,0 +1,105 @@
+ import 'package:flutter/material.dart';
+ import 'package:provider/provider.dart';
+ void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => CounterProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: HomeScreen(),
+      ),
+    ),
+  );
+ }
+ class CounterProvider extends ChangeNotifier {
+  int count = 0;
+  void increment() {
+    count++;
+    notifyListeners();
+  }
+ }
+ class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.cyan,
+      appBar: AppBar(
+        backgroundColor: Colors.purple,
+        title: Text("SetState Vs Provider"),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: [
+          ComparisonWidget(),
+        ],
+      ),
+    );
+  }
+ }
+ class ComparisonWidget extends StatefulWidget {
+  @override
+  _ComparisonWidgetState createState() {
+    return _ComparisonWidgetState();
+  }
+ }
+ class _ComparisonWidgetState extends State<ComparisonWidget> {
+  int count = 0;
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<CounterProvider>(context, listen: true);
+    return Center(
+      child: Column(
+        children: [
+          // Stateful Widget Container
+          Container(
+            margin: EdgeInsets.all(10),
+            padding: EdgeInsets.all(20),
+ //             width: 400,
+ //             height: 110,
+            color: Colors.lightGreen,
+            child: Column(
+              children: [
+                SizedBox(height: 10),
+                Text("Stateful Widget(data changes)"),
+                SizedBox(height: 10),
+                Text("count : ${count}"),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      count++;
+                    });
+                  },
+                  child: Text("click me"),
+                ),
+              ],
+            ),
+          ),
+          // Provider Container
+          Container(
+            margin: EdgeInsets.all(10),
+            padding: EdgeInsets.all(20),
+ //             width: 600,
+ //             height: 110,
+            color: Colors.yellow,
+            child: Column(
+              children: [
+                SizedBox(height: 10),
+                Text("Provider(data changes)"),
+                SizedBox(height: 10),
+                Text("count : ${provider.count}"),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    provider.increment();
+                  },
+                  child: Text("click me"),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+ 
